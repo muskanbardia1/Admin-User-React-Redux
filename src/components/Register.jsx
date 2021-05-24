@@ -13,12 +13,14 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import CardActionArea from "@material-ui/core/CardActionArea";
 import MuiPhoneNumber from "material-ui-phone-number";
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import {store} from '../store/store'
 import { insertUser } from '../redux/actions'
+import { useHistory } from "react-router-dom";
 
 
 
@@ -68,6 +70,9 @@ export default function Register() {
   const [email, setemail] = useState("");
   const [address, setaddress] = useState("");
   const [isValidated, setIsValidated] = useState(false);
+  const [userAdded, setUserAdded] = useState(false);
+
+  let history = useHistory();
 
   const handlePhoneChange = (value) => {
     
@@ -123,29 +128,29 @@ export default function Register() {
 
     var pwd = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
 
-    // if (fName.length < 1) {
-    //   setIsValidated(false);
-    //   document.getElementById("fname").innerHTML = "Field is required!";
-    // } else if (fName.length < 3) {
-    //   setIsValidated(false);
+    if (fName.length < 1) {
+      setIsValidated(false);
+      document.getElementById("fname").innerHTML = "Field is required!";
+    } else if (fName.length < 3) {
+      setIsValidated(false);
 
-    //   document.getElementById("fname").innerHTML = "lenght more than 3!";
-    // } else if (lName.length < 1) {
-    //   setIsValidated(false);
+      document.getElementById("fname").innerHTML = "lenght more than 3!";
+    } else if (lName.length < 1) {
+      setIsValidated(false);
 
-    //   document.getElementById("lname").innerHTML = "Field is required!";
-    // } else if (lName.length < 3) {
-    //   setIsValidated(false);
+      document.getElementById("lname").innerHTML = "Field is required!";
+    } else if (lName.length < 3) {
+      setIsValidated(false);
 
-    //   document.getElementById("lname").innerHTML = "lenght more than 3!";
-    // } else if (pass.length < 6 || !pass.match(pwd)) {
-    //   setIsValidated(false);
+      document.getElementById("lname").innerHTML = "lenght more than 3!";
+    } else if (pass.length < 6 || !pass.match(pwd)) {
+      setIsValidated(false);
 
-    //   document.getElementById("pass").innerHTML =
-    //     "length more than 6 & one character, Uppercase , lowercase required";
-    // } else {
+      document.getElementById("pass").innerHTML =
+        "length more than 6 & one character, Uppercase , lowercase required";
+    } else {
       setIsValidated(true);
-    // }
+    }
   };
 
   useEffect(() => {
@@ -159,10 +164,16 @@ export default function Register() {
           profilePic: selectedFile,
           phone: phone })
       );
-      
-      
+      setUserAdded(true);
     }
+    setIsValidated(false)
   }, [isValidated]);
+
+  useEffect(() => {
+    if (userAdded) {
+      history.push("/login");
+    }
+  }, [userAdded]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -180,12 +191,13 @@ export default function Register() {
                 name="firstName"
                 variant="outlined"
                 required
-                fullWidth
                 id="firstName"
+                fullWidth
                 label="First Name"
                 autoFocus
                 onChange={(e) => handleFname(e)}
               />
+              <span id="fname"></span>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -198,6 +210,7 @@ export default function Register() {
                 autoComplete="lname"
                 onChange={(e) => handleLname(e)}
               />
+              <span id="lname"></span>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -246,6 +259,7 @@ export default function Register() {
                 onChange={(e) => handlePass(e)}
                 autoComplete="current-password"
               />
+              <span id="pass"></span>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -269,7 +283,13 @@ export default function Register() {
               type="file"
               onChange={(e) => handleUploadClick(e)}
             />
-           
+           <CardActionArea >
+          <img
+            width="100%"
+            className={classes.media}
+            src={selectedFile}
+          />
+        </CardActionArea>
             <label htmlFor="contained-button-file">
                <Typography component="h1" variant="h5">
           Upload profile
@@ -291,7 +311,7 @@ export default function Register() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/login" onClick={e=>setUserAdded(true)} variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

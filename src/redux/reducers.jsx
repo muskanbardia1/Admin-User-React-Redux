@@ -1,6 +1,7 @@
 const initialState = {
   admin: [],
   users: [],
+  isLogged: false,
 }
 
 export default function (state = initialState, action) {
