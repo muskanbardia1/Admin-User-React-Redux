@@ -3,18 +3,25 @@ import Register from './components/Register';
 import SignIn from './components/SignIn';
 import { useSelector } from "react-redux";
 import { Route, Switch, Redirect } from "react-router";
+import UserDashboard from './components/UserDashboard';
+import AdminDashboard from './components/AdminDashboard';
 
 
 
 function App() {
-  // const { isLogged } = useSelector((state) => state.signUpList);
+  const { isLogged } = useSelector((state) => state.isLogged);
   return (
     <div className="App">
+      {/* <SignIn /> */}
      <Switch>
         <Route exact path="/" component={Register} />
         <Route exact path="/login" component={SignIn} />
-        {/* <PrivateRoute path="/adduser" component={AddUser} isLogged={isLogged} />
-        <PrivateRoute
+        <Route exact path="/userDashboard" component={UserDashboard} />
+        <Route exact path="/adminDashboard" component={AdminDashboard} />
+        {/* <PrivateRoute path="/userDashboard" Component={UserDashboard} isLogged={isLogged} />
+        <PrivateRoute path="/adminDashboard" Component={AdminDashboard} isLogged={isLogged} /> */}
+        
+        {/* <PrivateRoute
           path="/welcome"
           component={WelcomSong}
           isLogged={isLogged}
@@ -23,8 +30,8 @@ function App() {
           path="/dashboard"
           component={dashboard}
           isLogged={isLogged}
-        /> */}
-      </Switch>
+        />*/} 
+      </Switch> 
     </div>
   );
 }
@@ -40,7 +47,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         ) : (
           <Redirect
             to={{
-              pathname: "/",
+              pathname: "/login",
             }}
           />
         )

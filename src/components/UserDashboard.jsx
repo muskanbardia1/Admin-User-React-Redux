@@ -10,6 +10,7 @@ import Avatar from "@material-ui/core/Avatar";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { Badge } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,45 +38,35 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserDashboard() {
   const signUpList = useSelector((state) => state.signUpList);
-  const infoList = useSelector((state) => state.infoList);
+  const loggedProfile = useSelector((state) => state.loggedProfile);
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Link to="/welcome">
+      <Link to="/login">
         <IconButton color="inherit">
           <Badge>
-            <KeyboardBackspaceIcon className={classes.large} />
+            <ExitToAppIcon className={classes.large} />
           </Badge>
         </IconButton>
       </Link>
 
       <Container component="main" className={classes.main} maxWidth="sm">
+      <img width="20%"  className={classes.media} src={loggedProfile.profilePic}/>
         <Typography variant="h2" component="h1" gutterBottom>
-          {/* {signUpList && signUpList.firstName + " " + signUpList.lastName} */}
+           {loggedProfile && loggedProfile.firstName + " " + loggedProfile.lastName} 
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
-          {/* Email: {signUpList.email} */}
+          Email: {loggedProfile.email}
         </Typography>
-        <Typography variant="h3" component="h2" gutterBottom>
-          Song List: <br />
-          {/* {infoList &&
-            infoList.map((list) => (
-              <>
-                <IconButton color="inherit">
-                  <Avatar src="../img_40723.png" className={classes.large} />
-                </IconButton>
-
-                <Typography
-                  style={{ textDecoration: "none" }}
-                  style={{ display: "flex", justifyContent: "center" }}
-                >
-                  {list.name}
-                </Typography>
-              </>
-            ))} */}
+        <Typography variant="h5" component="h2" gutterBottom>
+          Phone: {loggedProfile.phone}
         </Typography>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Address: {loggedProfile.address}
+        </Typography>
+        
       </Container>
       <footer className={classes.footer}>
         <Container maxWidth="sm">
