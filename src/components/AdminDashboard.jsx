@@ -29,55 +29,12 @@ import { useSelector } from "react-redux";
 import { store } from '../store/store';
 import { loggedUser, isLogged, deleteUser } from '../redux/actions';
 
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
+import SearchBar from "material-ui-search-bar";
+
+
 
 const drawerWidth = 240;
 
-const rows = [
-  createData(
-    0,
-    "16 Mar, 2019",
-    "Elvis Presley",
-    "Tupelo, MS",
-    "VISA ⠀•••• 3719",
-    312.44
-  ),
-  createData(
-    1,
-    "16 Mar, 2019",
-    "Paul McCartney",
-    "London, UK",
-    "VISA ⠀•••• 2574",
-    866.99
-  ),
-  createData(
-    2,
-    "16 Mar, 2019",
-    "Tom Scholz",
-    "Boston, MA",
-    "MC ⠀•••• 1253",
-    100.81
-  ),
-  createData(
-    3,
-    "16 Mar, 2019",
-    "Michael Jackson",
-    "Gary, IN",
-    "AMEX ⠀•••• 2000",
-    654.39
-  ),
-  createData(
-    4,
-    "15 Mar, 2019",
-    "Bruce Springsteen",
-    "Long Branch, NJ",
-    "VISA ⠀•••• 5919",
-    212.79
-  ),
-];
 
 function preventDefault(event) {
   event.preventDefault();
@@ -167,8 +124,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Orders() {
   const classes = useStyles();
+  const [searched, setSearched] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const { users } = useSelector((state) => state);
+  const [data, setdata] = React.useState(users);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -178,6 +137,18 @@ export default function Orders() {
   const deleteUser = (user) =>{
     store.dispatch(deleteUser(user))
   }
+
+  const requestSearch = (searchedVal) => {
+    const filteredRows = data.filter((row) => {
+      return row.firstName.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setdata(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };
 
   return (
     <div className={classes.root}>
@@ -226,6 +197,7 @@ export default function Orders() {
         }}
         open={open}
       >
+        
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
@@ -249,6 +221,11 @@ export default function Orders() {
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
+              <SearchBar
+          value={searched}
+          onChange={(searchVal) => requestSearch(searchVal)}
+          onCancelSearch={() => cancelSearch()}
+        />
                 <React.Fragment>
                   {/* { firstName: fName, 
           lastName: lName,
@@ -270,7 +247,7 @@ export default function Orders() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {users.map((user, id) => (
+                      {data.map((user, id) => (
                         <TableRow key={id}>
                           <TableCell>
                             <img
@@ -287,10 +264,10 @@ export default function Orders() {
                           <TableCell>{user.phone}</TableCell>
                           <TableCell align="right">
                             <Button variant="contained" color="primary">
-                              View profile
+                              View
                             </Button>
                             <Button variant="contained" onClick={e => deleteUser(user)} color="secondary">
-                              Delete profile
+                              Delete
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -298,9 +275,7 @@ export default function Orders() {
                     </TableBody>
                   </Table>
                   <div className={classes.seeMore}>
-                    <Link color="primary" href="#" onClick={preventDefault}>
-                      See more orders
-                    </Link>
+                    
                   </div>
                 </React.Fragment>
               </Paper>
