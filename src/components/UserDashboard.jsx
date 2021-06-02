@@ -11,6 +11,8 @@ import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { Badge } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { store } from '../store/store';
+import { isLogged } from '../redux/actions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,11 +43,15 @@ export default function UserDashboard() {
   const loggedProfile = useSelector((state) => state.loggedProfile);
   const classes = useStyles();
 
+  const signOut = () => {
+    store.dispatch(isLogged(false));
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Link to="/login">
-        <IconButton color="inherit">
+        <IconButton color="inherit" onClick={e=>signOut(e)}>
           <Badge>
             <ExitToAppIcon className={classes.large} />
           </Badge>

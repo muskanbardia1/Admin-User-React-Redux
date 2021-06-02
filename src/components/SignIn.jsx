@@ -133,6 +133,9 @@ export default function SignIn() {
   //   )
 
   // }, []);
+  const gotoSignUp = () =>{
+    history.push("/");
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -198,9 +201,9 @@ export default function SignIn() {
           <span id="invalid"></span>
           <Grid container>
           <Grid item>
-              <Link href="/" variant="body2">
+              <span onClick={e=>gotoSignUp(e)}>
                 {"Don't have an account? Sign Up"}
-              </Link>
+              </span>
             </Grid>
           </Grid>
         </form>

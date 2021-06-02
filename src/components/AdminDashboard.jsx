@@ -137,6 +137,7 @@ export default function Orders() {
   const deleteUser = (user) =>{
     store.dispatch(deleteUser(user))
   }
+  
 
   const requestSearch = (searchedVal) => {
     const filteredRows = data.filter((row) => {
@@ -149,6 +150,10 @@ export default function Orders() {
     setSearched("");
     requestSearch(searched);
   };
+
+  const signOut = () => {
+    store.dispatch(isLogged(false));
+  }
 
   return (
     <div className={classes.root}>
@@ -181,7 +186,7 @@ export default function Orders() {
           </Typography>
           <Tooltip title="Sign out" aria-label="add">
             <Link to="/login">
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={e =>signOut(e)}>
               <Badge color="secondary">
                 <ExitToAppIcon />
               </Badge>
