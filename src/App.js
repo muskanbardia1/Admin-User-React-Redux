@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { Route, Switch, Redirect } from "react-router";
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
-import ViewAdmin from './components/ViewAdmin';
 
 
 

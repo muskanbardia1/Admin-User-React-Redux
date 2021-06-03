@@ -128,6 +128,7 @@ export default function Orders() {
   const [data, setdata] = React.useState(users);
   const [switcher, setswitcher] = React.useState(false);
   const [selectedUser, setselectedUser] = React.useState();
+  
 
   let history = useHistory();
 
@@ -168,6 +169,7 @@ export default function Orders() {
   const signOut = () => {
     store.dispatch(isLogged(false));
     history.push("/login")
+
     
   };
 
@@ -254,14 +256,7 @@ export default function Orders() {
                     onCancelSearch={() => cancelSearch()}
                   />
                   <React.Fragment>
-                    {/* { firstName: fName, 
-          lastName: lName,
-          email: email, 
-          pass: pass,
-          address: address,
-          profilePic: selectedFile,
-          phone: phone } */}
-
+                   
                     <Table size="small">
                       <TableHead>
                         <TableRow>

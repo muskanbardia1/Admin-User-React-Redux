@@ -153,6 +153,7 @@ export default function ViewAdmin({switcher, setswitcher, selectedUser}) {
           firstName: fName,
           lastName: lName,
           email: email,
+          profilePic:selectedFile,
           pass: pass,
           address: address,
           phone: phone,
