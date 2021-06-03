@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Route, Switch, Redirect } from "react-router";
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
+import ViewAdmin from './components/ViewAdmin';
 
 
 
@@ -12,7 +13,7 @@ function App() {
   const { isLogged } = useSelector((state) => state.isLogged);
   return (
     <div className="App">
-      {/* <SignIn /> */}
+      {/* <ViewAdmin /> */}
      <Switch>
         <Route exact path="/" component={Register} />
         <Route exact path="/login" component={SignIn} />
@@ -30,7 +31,7 @@ function App() {
           path="/dashboard"
           component={dashboard}
           isLogged={isLogged}
-        />*/} 
+        />  */}
       </Switch> 
     </div>
   );

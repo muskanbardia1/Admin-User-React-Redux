@@ -201,7 +201,7 @@ export default function SignIn() {
           <span id="invalid"></span>
           <Grid container>
           <Grid item>
-              <span onClick={e=>gotoSignUp(e)}>
+              <span onClick={e=>gotoSignUp(e)} style={{color:"blue", cursor:"pointer"}}>
                 {"Don't have an account? Sign Up"}
               </span>
             </Grid>

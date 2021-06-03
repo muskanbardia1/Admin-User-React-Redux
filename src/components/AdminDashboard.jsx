@@ -8,7 +8,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
@@ -26,15 +25,14 @@ import clsx from "clsx";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Button from "@material-ui/core/Button";
 import { useSelector } from "react-redux";
-import { store } from '../store/store';
-import { loggedUser, isLogged, deleteUser } from '../redux/actions';
+import { store } from "../store/store";
+import { loggedUser, isLogged, deleteUser } from "../redux/actions";
+import { useHistory } from "react-router-dom";
 
 import SearchBar from "material-ui-search-bar";
-
-
+import ViewAdmin from "./ViewAdmin";
 
 const drawerWidth = 240;
-
 
 function preventDefault(event) {
   event.preventDefault();
@@ -128,32 +126,56 @@ export default function Orders() {
   const [open, setOpen] = React.useState(false);
   const { users } = useSelector((state) => state);
   const [data, setdata] = React.useState(users);
+  const [switcher, setswitcher] = React.useState(false);
+  const [selectedUser, setselectedUser] = React.useState();
+
+  let history = useHistory();
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const deleteUser = (user) =>{
-    store.dispatch(deleteUser(user))
-  }
-  
+  const deletePerson = (id) => {
+    users.map((user,index) => 
+      user.id == id ? store.dispatch(deleteUser(id)): ""
+    )
+    
+  };
+
+  React.useEffect(() => {
+    setdata(users)
+  }, [users])
 
   const requestSearch = (searchedVal) => {
+    if(searchedVal!=""){
     const filteredRows = data.filter((row) => {
       return row.firstName.toLowerCase().includes(searchedVal.toLowerCase());
     });
-    setdata(filteredRows);
+    setdata(filteredRows);}
+    else{
+      setdata(users);
+    }
   };
 
   const cancelSearch = () => {
     setSearched("");
-    requestSearch(searched);
+    requestSearch("searched");
+    setdata(users)
   };
 
   const signOut = () => {
     store.dispatch(isLogged(false));
-  }
+    history.push("/login")
+    
+  };
+
+  const ViewUser = (person) => {
+    setselectedUser(person);
+    console.log(switcher);
+    setswitcher(true);
+  };
 
   return (
     <div className={classes.root}>
@@ -186,11 +208,11 @@ export default function Orders() {
           </Typography>
           <Tooltip title="Sign out" aria-label="add">
             <Link to="/login">
-            <IconButton color="inherit" onClick={e =>signOut(e)}>
-              <Badge color="secondary">
-                <ExitToAppIcon />
-              </Badge>
-            </IconButton>
+              <IconButton color="inherit" onClick={(e) => signOut(e)}>
+                <Badge color="secondary">
+                  <ExitToAppIcon  style={{color: "white"}}/>
+                </Badge>
+              </IconButton>
             </Link>
           </Tooltip>
         </Toolbar>
@@ -202,7 +224,6 @@ export default function Orders() {
         }}
         open={open}
       >
-        
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
@@ -225,14 +246,15 @@ export default function Orders() {
             </Grid>
             {/* Recent Orders */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-              <SearchBar
-          value={searched}
-          onChange={(searchVal) => requestSearch(searchVal)}
-          onCancelSearch={() => cancelSearch()}
-        />
-                <React.Fragment>
-                  {/* { firstName: fName, 
+              {!switcher && (
+                <Paper className={classes.paper}>
+                  <SearchBar
+                    value={searched}
+                    onChange={(searchVal) => requestSearch(searchVal)}
+                    onCancelSearch={() => cancelSearch()}
+                  />
+                  <React.Fragment>
+                    {/* { firstName: fName, 
           lastName: lName,
           email: email, 
           pass: pass,
@@ -240,50 +262,64 @@ export default function Orders() {
           profilePic: selectedFile,
           phone: phone } */}
 
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Profile</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Address</TableCell>
-                        <TableCell>Phone</TableCell>
-                        <TableCell align="right">Action</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {data.map((user, id) => (
-                        <TableRow key={id}>
-                          <TableCell>
-                            <img
-                              width="40%"
-                              className={classes.media}
-                              src={user.profilePic}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {user.firstName} {user.lastName}
-                          </TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>{user.address}</TableCell>
-                          <TableCell>{user.phone}</TableCell>
-                          <TableCell align="right">
-                            <Button variant="contained" color="primary">
-                              View
-                            </Button>
-                            <Button variant="contained" onClick={e => deleteUser(user)} color="secondary">
-                              Delete
-                            </Button>
-                          </TableCell>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Profile</TableCell>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Email</TableCell>
+                          <TableCell>Address</TableCell>
+                          <TableCell>Phone</TableCell>
+                          <TableCell align="right">Action</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                  <div className={classes.seeMore}>
-                    
-                  </div>
-                </React.Fragment>
-              </Paper>
+                      </TableHead>
+                      <TableBody>
+                        {data.map((user, id) => (
+                          <TableRow key={id}>
+                            <TableCell>
+                              <img
+                                width="40%"
+                                className={classes.media}
+                                src={user.profilePic}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {user.firstName} {user.lastName}
+                            </TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell>{user.address}</TableCell>
+                            <TableCell>{user.phone}</TableCell>
+                            <TableCell align="right">
+                              <Button
+                                variant="contained"
+                                onClick={() => ViewUser(user)}
+                                color="primary"
+                              >
+                                View
+                              </Button>
+                              <Button
+                                variant="contained"
+                                onClick={()=> deletePerson(user.id)}
+                                color="secondary"
+                              >
+                                Delete
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className={classes.seeMore}></div>
+                  </React.Fragment>
+                </Paper>
+              )}
+              {switcher && (
+                <ViewAdmin
+                  switcher={switcher}
+                  setswitcher={setswitcher}
+                  selectedUser={selectedUser}
+                />
+              )}
             </Grid>
           </Grid>
         </Container>

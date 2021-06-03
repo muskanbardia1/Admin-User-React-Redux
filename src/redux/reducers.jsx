@@ -1,7 +1,8 @@
 import { INSERT_USER,
   LOGGED_USER,
   LOGGED_IN,
-  DELETE_USER
+  DELETE_USER,
+  UPDATE_USER
 } from './actions';
 
 const initialState = {
@@ -34,7 +35,13 @@ export default function (state = initialState, action) {
       case DELETE_USER:
         return {
           ...state,
-          users:[...state.users.filter((user) => !user == action.payload)]
+          users:[...state.users.filter((user) => user.id !== action.payload)]
+        }
+      case UPDATE_USER:
+        return {
+          ...state,
+          users:[...state.users.map((user, index)=>
+            user.id == action.id ? action.payload : user )]
         }
     default: return state;
   }

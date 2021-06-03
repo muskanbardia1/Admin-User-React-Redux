@@ -1,64 +1,59 @@
-import React,{useState, useEffect} from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React, { useState, useEffect } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { v4 as uuidv4 } from 'uuid';
 
 import CardActionArea from "@material-ui/core/CardActionArea";
 import MuiPhoneNumber from "material-ui-phone-number";
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import {store} from '../store/store'
-import { insertUser } from '../redux/actions'
+import { store } from "../store/store";
+import { insertUser } from "../redux/actions";
 import { useHistory } from "react-router-dom";
-
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   contact: {
-    width: '100%'
+    width: "100%",
   },
   imageUp: {
-    display: "none"
+    display: "none",
   },
   button: {
-    
-    margin: 10
+    margin: 10,
   },
   upload: {
-    flexDirection: "row"
-  }
-  
+    flexDirection: "row",
+  },
 }));
-
-
 
 export default function Register() {
   const classes = useStyles();
@@ -75,29 +70,23 @@ export default function Register() {
   let history = useHistory();
 
   const handlePhoneChange = (value) => {
-    
     console.log(phone);
-      setphone(value);
-    
-  }
+    setphone(value);
+  };
 
   const handleUploadClick = (event) => {
     console.log();
     var file = event.target.files[0];
     const reader = new FileReader();
     var url = reader.readAsDataURL(file);
-  
+
     reader.onloadend = function (e) {
-      setselectedFile(
-         [reader.result]
-      );
+      setselectedFile([reader.result]);
     }.bind(this);
     console.log(url); // Would see a path?
-  
-    setselectedFile( event.target.files[0]);
+
+    setselectedFile(event.target.files[0]);
   };
-
-
 
   const handleFname = (e) => {
     setfName(e.target.value);
@@ -119,14 +108,15 @@ export default function Register() {
     setpass(e.target.value);
   };
 
-  const handleAddress = (e) =>{
+  const handleAddress = (e) => {
     setaddress(e.target.value);
-  }
+  };
 
   const register = (e) => {
     e.preventDefault();
 
-    var pwd = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+    var pwd =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
 
     if (fName.length < 1) {
       setIsValidated(false);
@@ -156,17 +146,20 @@ export default function Register() {
   useEffect(() => {
     if (isValidated) {
       store.dispatch(
-        insertUser({ firstName: fName, 
+        insertUser({
+          id: uuidv4(),
+          firstName: fName,
           lastName: lName,
-          email: email, 
+          email: email,
           pass: pass,
           address: address,
           profilePic: selectedFile,
-          phone: phone })
+          phone: phone,
+        })
       );
       setUserAdded(true);
     }
-    setIsValidated(false)
+    setIsValidated(false);
   }, [isValidated]);
 
   useEffect(() => {
@@ -175,11 +168,14 @@ export default function Register() {
     }
   }, [userAdded]);
 
+  const gotologin = () => {
+    history.push("/login")
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        
         <Typography component="h1" variant="h5">
           Register
         </Typography>
@@ -224,28 +220,29 @@ export default function Register() {
                 onChange={(e) => handleemail(e)}
               />
             </Grid>
-            
-            
+
             <Grid item xs={12}>
-            <MuiPhoneNumber
-                    name="phone"
-                    label="Phone Number*"
-                    data-cy="user-phone"
-                    defaultCountry={'us'}
-                    value={phone}
-                    onChange={(e) =>handlePhoneChange(e)}
-                    className={classes.contact} variant="outlined"
-                  />
+              <MuiPhoneNumber
+                name="phone"
+                label="Phone Number*"
+                data-cy="user-phone"
+                defaultCountry={"us"}
+                value={phone}
+                onChange={(e) => handlePhoneChange(e)}
+                className={classes.contact}
+                variant="outlined"
+              />
             </Grid>
             <Grid item xs={12}>
-            <TextField 
-            label="Address*" 
-            aria-label="minimum height" 
-            rowsMin={3} 
-            placeholder="Address"
-            className={classes.contact} 
-            variant="outlined" 
-            onChange={(e) => handleAddress(e)}/>
+              <TextField
+                label="Address*"
+                aria-label="minimum height"
+                rowsMin={3}
+                placeholder="Address"
+                className={classes.contact}
+                variant="outlined"
+                onChange={(e) => handleAddress(e)}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -274,30 +271,35 @@ export default function Register() {
                 autoComplete="current-password"
               />
             </Grid>
-            <Grid item xs={12} display="flex" className={classes.upload}>
-            <input
-              accept="image/*"
-              className={classes.imageUp}
-              id="contained-button-file"
-              multiple
-              type="file"
-              onChange={(e) => handleUploadClick(e)}
-            />
-           <CardActionArea >
-          <img
-            width="100%"
-            className={classes.media}
-            src={selectedFile}
-          />
-        </CardActionArea>
-            <label htmlFor="contained-button-file">
-               <Typography component="h1" variant="h5">
-          Upload profile
-        </Typography>
-              <Fab component="span" className={classes.button}>
-                <AddPhotoAlternateIcon />
-              </Fab>
-            </label>
+            <Grid item xs={12} display="flex" sm={4} className={classes.upload}>
+              <input
+                accept="image/*"
+                className={classes.imageUp}
+                id="contained-button-file"
+                multiple
+                type="file"
+                onChange={(e) => handleUploadClick(e)}
+              />
+              <CardActionArea>
+                <img
+                  width="100%"
+                  className={classes.media}
+                  src={selectedFile}
+                />
+              </CardActionArea>
+            </Grid>
+            <Grid item xs={12} display="flex" sm={4}>
+              <Typography component="h3" variant="h6">
+                Upload profile
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} display="flex" sm={4}>
+              <label htmlFor="contained-button-file">
+                <Fab component="span" className={classes.button}>
+                  <AddPhotoAlternateIcon />
+                </Fab>
+              </label>
             </Grid>
           </Grid>
           <Button
@@ -311,14 +313,14 @@ export default function Register() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/login" onClick={e=>setUserAdded(true)} variant="body2">
+              <span onClick={e=>gotologin(e)} style={{color:"blue", cursor:"pointer"}}
+              >
                 Already have an account? Sign in
-              </Link>
+              </span>
             </Grid>
           </Grid>
         </form>
       </div>
-      
     </Container>
   );
 }

@@ -3,6 +3,7 @@ export const INSERT_USER = "INSERT_USER";
 export const LOGGED_USER = "LOGGED_USER";
 export const LOGGED_IN = "LOGGED_IN";
 export const DELETE_USER = "DELETE_USER";
+export const UPDATE_USER = "UPDATE_USER";
 
 
 
@@ -29,4 +30,9 @@ export const deleteUser = (data) => {
     dispatch({ type: DELETE_USER , payload: data });
   };
 };
+export const updateData = (data, id) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_USER , payload: data, id:id })
+  }
+}
 
