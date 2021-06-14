@@ -19,6 +19,8 @@ import clsx from "clsx";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Button from "@material-ui/core/Button";
 
+import EditUser from "./EditUser";
+
 import { useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
@@ -128,6 +130,9 @@ const useStyles = makeStyles((theme) => ({
 export default function UserDashboard() {
   const signUpList = useSelector((state) => state.signUpList);
   const loggedProfile = useSelector((state) => state.loggedProfile);
+  const [switcher, setswitcher] = React.useState(false);
+  const { users } = useSelector((state) => state);
+  const [selectedUser, setselectedUser] = React.useState();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -139,6 +144,11 @@ export default function UserDashboard() {
   };
   const signOut = () => {
     store.dispatch(isLogged(false));
+  };
+
+  const editProfile = (loggedProfile) => {
+    setselectedUser(loggedProfile);
+    setswitcher(true);
   };
 
   return (
@@ -202,37 +212,52 @@ export default function UserDashboard() {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            
             <Grid item xs={12}>
-              <Container
-                component="main"
-                className={classes.main}
-                maxWidth="sm"
-              >
-                <img
-                  width="20%"
-                  className={classes.media}
-                  src={loggedProfile.profilePic}
+              {!switcher && (
+                <Container
+                  component="main"
+                  className={classes.main}
+                  maxWidth="sm"
+                >
+                  <img
+                    width="20%"
+                    className={classes.media}
+                    src={loggedProfile.profilePic}
+                  />
+                  <Typography variant="h2" component="h1" gutterBottom>
+                    {loggedProfile &&
+                      loggedProfile.firstName + " " + loggedProfile.lastName}
+                  </Typography>
+                  <Typography variant="h5" component="h2" gutterBottom>
+                    Email: {loggedProfile.email}
+                  </Typography>
+                  <Typography variant="h5" component="h2" gutterBottom>
+                    Phone: {loggedProfile.phone}
+                  </Typography>
+                  <Typography variant="h5" component="h2" gutterBottom>
+                    Address: {loggedProfile.address}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() => editProfile(loggedProfile)}
+                    color="primary"
+                  >
+                    Edit
+                  </Button>
+                </Container>
+              )}
+
+              {switcher && (
+                <EditUser
+                  switcher={switcher}
+                  setswitcher={setswitcher}
+                  selectedUser={selectedUser}
                 />
-                <Typography variant="h2" component="h1" gutterBottom>
-                  {loggedProfile &&
-                    loggedProfile.firstName + " " + loggedProfile.lastName}
-                </Typography>
-                <Typography variant="h5" component="h2" gutterBottom>
-                  Email: {loggedProfile.email}
-                </Typography>
-                <Typography variant="h5" component="h2" gutterBottom>
-                  Phone: {loggedProfile.phone}
-                </Typography>
-                <Typography variant="h5" component="h2" gutterBottom>
-                  Address: {loggedProfile.address}
-                </Typography>
-              </Container>
+              )}
             </Grid>
           </Grid>
         </Container>
       </main>
-    
 
       <footer className={classes.footer}>
         <Container maxWidth="sm">
