@@ -18,6 +18,8 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import clsx from "clsx";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Button from "@material-ui/core/Button";
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import PersonIcon from '@material-ui/icons/Person';
 
 import EditUser from "./EditUser";
 
@@ -134,6 +136,7 @@ export default function UserDashboard() {
   const { users } = useSelector((state) => state);
   const [selectedUser, setselectedUser] = React.useState();
   const classes = useStyles();
+  const [userprofile,setuserprofile] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -144,6 +147,10 @@ export default function UserDashboard() {
   };
   const signOut = () => {
     store.dispatch(isLogged(false));
+  };
+
+  const profile = () => {
+    setuserprofile(!userprofile);
   };
 
   const editProfile = (loggedProfile) => {
@@ -180,6 +187,17 @@ export default function UserDashboard() {
           >
             Dashboard
           </Typography>
+          <Tooltip title="Profile" aria-label="add">
+              <IconButton color="inherit" onClick={(e) => profile(e)}>
+                <Badge color="secondary">
+                  {!userprofile ? 
+                  <PermIdentityIcon style={{ color: "white" }} />
+                  :
+                  <PersonIcon style={{ color: "white" }} />
+                  }
+                </Badge>
+              </IconButton>
+          </Tooltip>
           <Tooltip title="Sign out" aria-label="add">
             <Link to="/login">
               <IconButton color="inherit" onClick={(e) => signOut(e)}>
@@ -208,7 +226,7 @@ export default function UserDashboard() {
         <Divider />
         <List>{}</List>
       </Drawer>
-      <main className={classes.content}>
+      {userprofile && <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
@@ -257,7 +275,7 @@ export default function UserDashboard() {
             </Grid>
           </Grid>
         </Container>
-      </main>
+      </main>}
 
       <footer className={classes.footer}>
         <Container maxWidth="sm">
